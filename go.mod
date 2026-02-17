@@ -3,6 +3,6 @@ module github.com/ARTHITSIANGWAN/thitnueahub-agent-to-agent-gripen
 go 1.21
 
 require (
-    // เดี๋ยวเราจะดึง google.golang.org/genai มาใส่ที่นี่ครับ
+    // หัวใจหลักในการเชื่อมต่อกับ Gemini API
+    google.golang.org/genai v0.1.0 
 )
-
