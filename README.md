@@ -34,5 +34,8 @@ graph LR
     style D fill:#00308f,color:#fff
     style F fill:#ff0000,color:#fff
 
-💎 PayPal: paypal.me/arthitsiangwan
-☕ TrueMoney: https://profile.truemoney.com/MITB27N5
+---
+
+### 🐅 Jarvis Insight (ข้อแตกต่าง มือถือ vs คอม):
+* **ในคอม:** บอสจะเห็นกราฟ Mermaid เป็นรูปสวยงาม และข้อความ Fuel จะอยู่ข้างล่างแบบชัดเจน
+* **ในมือถือ:** ถ้าบอสใช้แอป GitHub บางทีมันไม่รันรูป Mermaid ให้ (จะเห็นเป็นโค้ด) แต่ถ้าบอส **"ปิดกรง"** (ที่ผมใส่เพิ่มให้) บอสจะเห็นข้อความ PayPal และ TrueMoney แยกออกมาเป็นบรรทัดใหม่ชัดเจน ไม่จมหายไปแน่นอนครับ!
