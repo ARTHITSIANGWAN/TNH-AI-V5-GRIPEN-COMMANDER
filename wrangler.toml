@@ -4,7 +4,7 @@ main = "src/index.ts"
 compatibility_date = "2026-05-06"
 compatibility_flags = [ "nodejs_compat" ]
 
-# 1. เชื่อมต่อ D1 Database (หัวใจของสัจจะ - ต้องใช้ ID เดียวกับ V8.3)
+# 1. เชื่อมต่อ D1 Database (หัวใจของสัจจะ - ต้องใช้ ID เดียวกับ V83)
 [[d1_databases]]
 binding = "DB" 
 database_name = "thitnueahub-core-db"
