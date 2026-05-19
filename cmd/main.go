@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-// GripenEngine คุมพิกัดรหัสลับตามไฟล์ wrangler.toml
 type GripenEngine struct {
 	DatabaseID string
 	KVID       string
@@ -18,7 +17,6 @@ type GripenEngine struct {
 	LastCron   time.Time
 }
 
-// โครงสร้างส่งสเตตัสให้หน้าบ้าน Fortress HQ V3
 type SystemStatus struct {
 	EngineName string    `json:"engine_name"`
 	D1Status   string    `json:"d1_status"`
@@ -27,48 +25,41 @@ type SystemStatus struct {
 }
 
 var (
-	// ตั้งพิกัด ID ตรงตามตู้เซฟ V83 และผังระบบในบ้าน
+	// ตั้งค่า ID ตรงตู้เซฟ V83 ห้ามขยับตามสัจจะ!
 	gripenConfig = GripenEngine{
-		DatabaseID: "6a8b4373-bf40-4b63-bb02-f612ecbe63b7", // ถัง thitnueahub-core-db
-		BucketName: "thitnueahub-assets",                  // ถัง R2 สกัดเลเยอร์รูปภาพ
-		KVID:       "2fa0a4773efa4a18b1534274d238dd76",     // ถัง KV ซิงค์ปฏิทิน
+		DatabaseID: "6a8b4373-bf40-4b63-bb02-f612ecbe63b7", // thitnueahub-core-db
+		BucketName: "thitnueahub-assets",                  // R2 Bucket
+		KVID:       "2fa0a4773efa4a18b1534274d238dd76",     // KV Namespace
 		Status:     "F16_READY",
 		LastCron:   time.Now(),
 	}
-	// กุญแจล็อกแรมเพื่อความสะอาด 5ส ป้องกันขยะจราจรชนกัน
 	engineMutex sync.RWMutex
 )
 
-// 1. ท่อคุมระบบจราจร Cron Trigger ทุก 3 นาที (ความไวระดับ F-16)
 func CronTriggerHandler(w http.ResponseWriter, r *http.Request) {
 	engineMutex.Lock()
 	gripenConfig.LastCron = time.Now()
-	fmt.Println("🚀 [Cron Trigger]: เครื่องยนต์ตื่นขึ้นมาสแกนปฏิทินและล้างท่อขยะระบบอัตโนมัติรอบ 3 นาทีแล้วก้า!")
+	fmt.Println("🚀 [Cron Trigger]: เครื่องยนต์ตื่นสแกนปฏิทินล้างท่อทุก 3 นาทีอัตโนมัติคราบบอส!")
 	engineMutex.Unlock()
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("CRON_PROCESSED_SUCCESS"))
 }
 
-// 2. ท่อประมวลผลรูปภาพ R2 Bucket & สั่งการ Gripen Brain
 func ImageAnalysisHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	
-	// จำลองกระบวนการคิด-วิเคราะห์-แยกแยะ (TAD Principle)
 	response := map[string]string{
 		"layer_status": "EXTRACTED",
 		"r2_binding":   gripenConfig.BucketName,
 		"ai_engine":    "GRIPEN_BRAIN_ACTIVE",
-		"latency":      "0.22ms", // ความไวระดับต่ำกว่ากระพริบตา
+		"latency":      "0.22ms",
 	}
-	
 	_ = json.NewEncoder(w).Encode(response)
 }
 
-// 3. ท่อส่งสเตตัสซิงค์ข้อมูลให้หน้าแดชบอร์ดเรืองแสงหลัก
 func LiveStatusHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*") // ปลดล็อค CORS ทะลุจอมือถือ
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	engineMutex.RLock()
 	status := SystemStatus{
@@ -83,16 +74,14 @@ func LiveStatusHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// มัดรวมเส้นทางส่งข้อมูล (Endpoints) เข้าสู่พอร์ตเดี่ยวของมหาจักรวรรดิ
 	http.HandleFunc("/api/v5/cron-trigger", CronTriggerHandler)
 	http.HandleFunc("/api/v5/analysis", ImageAnalysisHandler)
 	http.HandleFunc("/api/v5/status", LiveStatusHandler)
 
-	fmt.Println("⚡ [Gripen V5 Engine]: ทำการเก็บเมนเคลียร์ท่อระบบเสร็จสิ้น!")
-	fmt.Println("🌐 [Sovereign Port]: ล็อกพิกัดสแตนด์บายรอรบพอร์ตเดียวเดี่ยว ๆ :2026 ก้าปู๊นๆ!")
+	fmt.Println("⚡ [Gripen V5 Engine]: เคลียร์ท่อสอยขยะลิเกเรียบร้อยเป็นตับ!")
+	fmt.Println("🏰 [Sovereign Port]: ประจำการล็อกเป้าพอร์ตเดี่ยวกลาง :2026 พร้อมประจัญบานก้าปู๊นๆ!")
 
-	// ล็อกหน้าด่านพอร์ต 2026 ปิดประตูตีแมวขยะระบบหมดจด
 	if err := http.ListenAndServe(":2026", nil); err != nil {
-		log.Fatalf("ท่อเครื่องยนต์ขัดข้อง: %v", err)
+		log.Fatalf("ท่อพอร์ต 2026 ขัดข้อง: %v", err)
 	}
 }
